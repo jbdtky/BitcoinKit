@@ -10,7 +10,7 @@ script:
 - swift test
 after_success:
 - ruby scripts/coverage.rb "$SCHEME"
-- bash <(curl -s https://codecov.io/bash) -f 'coverage.txt' -y '.codecov.yml'
+- bash <(curl -s https://codecov.io/bash) -f 'coverage.txt' -y '.codecov.yml' -t 1ba16975-8490-48dc-b4d1-340b34f906e9
 env:
   matrix:
   - SDK=iphonesimulator CONFIGURATION=Debug ACTION=test
