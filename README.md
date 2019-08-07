@@ -139,13 +139,11 @@ $ gem install cocoapods
 To integrate BitcoinKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-source 'https://github.com/jbdtky/CocoaPods.git'
-source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '10.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-    pod 'BitcoinKit'
+    pod 'BitcoinKit',       :git => 'https://github.com/jbdtky/BitcoinKit.git'
 end
 ```
 
