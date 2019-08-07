@@ -39,6 +39,12 @@ let cashaddrTest = try AddressFactory.create("bchtest:pr6m7j9njldwwzlg9v7v53unlr
 // from Mainnet Cashaddr
 let cashaddrMain = try AddressFactory.create("bitcoincash:qpjdpjrm5zvp2al5u4uzmp36t9m0ll7gd525rss978")
 
+// from Testnet Slpaddr
+let cashaddrTest = try AddressFactory.create("slptest:qzpf2p6x77e956f6y2mwd55f4hqqnqdfnsqucg4m85")
+
+// from Mainnet Slpaddr
+let cashaddrMain = try AddressFactory.create("simpleledger:qzpf2p6x77e956f6y2mwd55f4hqqnqdfnsnps0cmvt")
+
 // from Base58 format
 let address = try AddressFactory.create("1AC4gh14wwZPULVPCdxUkgqbtPvC92PQPN")
 ```
