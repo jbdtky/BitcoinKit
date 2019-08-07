@@ -127,7 +127,7 @@ public struct DataChunk: ScriptChunk {
     public var string: String {
         var string: String
         guard !data.isEmpty else {
-            return "OP_0" // Empty data is encoded as OP_0.
+            return "0:[]" // Empty data is encoded as blank.
         }
 
         if isASCIIData(data: data) {

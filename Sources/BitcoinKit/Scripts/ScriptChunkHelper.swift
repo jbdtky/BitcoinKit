@@ -35,7 +35,11 @@ public struct ScriptChunkHelper {
     public static func scriptData(for data: Data, preferredLengthEncoding: Int) -> Data? {
         var scriptData: Data = Data()
 
-        if data.count < OpCode.OP_PUSHDATA1 && preferredLengthEncoding <= 0 {
+        if data.count == 0 && preferredLengthEncoding <= 0 {
+            // SLP empty data
+            scriptData += UInt8(0x4c) // Hex null
+            scriptData += UInt8(0x00) // Data length
+        } else if data.count < OpCode.OP_PUSHDATA1 && preferredLengthEncoding <= 0 {
             // do nothing
             scriptData += UInt8(data.count)
         } else if data.count <= (0xff) && (preferredLengthEncoding == -1 || preferredLengthEncoding == 1) {
@@ -62,7 +66,7 @@ public struct ScriptChunkHelper {
         }
 
         let opcode: UInt8 = scriptData[offset]
-
+        
         if opcode > OpCode.OP_PUSHDATA4 {
             // simple opcode
             let range = Range(offset..<offset + MemoryLayout.size(ofValue: opcode))

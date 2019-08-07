@@ -366,9 +366,7 @@ public class Script {
 
     @discardableResult
     public func appendData(_ newData: Data) throws -> Script {
-        guard !newData.isEmpty else {
-            throw ScriptError.error("Data is empty.")
-        }
+        // Data can be empty to support SLP
 
         guard let addedScriptData = ScriptChunkHelper.scriptData(for: newData, preferredLengthEncoding: -1) else {
             throw ScriptError.error("Parse data to pushdata failed.")
