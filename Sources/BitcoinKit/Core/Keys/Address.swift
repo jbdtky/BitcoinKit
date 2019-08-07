@@ -33,6 +33,7 @@ public protocol AddressProtocol {
 
     var base58: String { get }
     var cashaddr: String { get }
+    var slpaddr: String { get }
 }
 
 #if os(iOS) || os(tvOS) || os(watchOS)
@@ -53,16 +54,18 @@ public struct LegacyAddress: Address {
     public let data: Data
     public let base58: Base58Check
     public let cashaddr: String
+    public let slpaddr: String
     public let publicKey: Data?
 
     public typealias Base58Check = String
 
-    public init(data: Data, type: AddressType, network: Network, base58: String, bech32: String, publicKey: Data?) {
+    public init(data: Data, type: AddressType, network: Network, base58: String, cashaddr: String, slpaddr: String, publicKey: Data?) {
         self.data = data
         self.type = type
         self.network = network
         self.base58 = base58
-        self.cashaddr = bech32
+        self.cashaddr = cashaddr
+        self.slpaddr = slpaddr
         self.publicKey = publicKey
     }
 
@@ -111,6 +114,16 @@ public struct LegacyAddress: Address {
         default:
             self.cashaddr = ""
         }
+        
+        // slpaddr
+        switch type {
+        case .pubkeyHash, .scriptHash:
+            let payload = Data([type.versionByte160]) + self.data
+            let scheme = network is Mainnet ? "simpleledger" : "slptest"
+            self.slpaddr = Bech32.encode(payload, prefix: scheme)
+        default:
+            self.slpaddr = ""
+        }
     }
     public init(data: Data, type: AddressType, network: Network) {
         let addressData: Data = [type.versionByte] + data
@@ -120,6 +133,7 @@ public struct LegacyAddress: Address {
         self.publicKey = nil
         self.base58 = publicKeyHashToAddress(addressData)
         self.cashaddr = Bech32.encode(addressData, prefix: network.scheme)
+        self.slpaddr = Bech32.encode(addressData, prefix: network is Mainnet ? "simpleledger" : "slptest")
     }
 }
 
@@ -141,16 +155,19 @@ public struct Cashaddr: Address {
     public let data: Data
     public let base58: String
     public let cashaddr: CashaddrWithScheme
+    public let slpaddr: SimpleLedgerAddressWithScheme
     public let publicKey: Data?
 
     public typealias CashaddrWithScheme = String
+    public typealias SimpleLedgerAddressWithScheme = String
 
-    public init(data: Data, type: AddressType, network: Network, base58: String, bech32: CashaddrWithScheme, publicKey: Data?) {
+    public init(data: Data, type: AddressType, network: Network, base58: String, cashaddr: CashaddrWithScheme, slpaddr: SimpleLedgerAddressWithScheme, publicKey: Data?) {
         self.data = data
         self.type = type
         self.network = network
         self.base58 = base58
-        self.cashaddr = bech32
+        self.cashaddr = cashaddr
+        self.slpaddr = slpaddr
         self.publicKey = publicKey
     }
 
@@ -190,6 +207,16 @@ public struct Cashaddr: Address {
             type = .scriptHash
             base58 = publicKeyHashToAddress(Data([network.scripthash]) + data)
         }
+        
+        // slpaddr
+        switch type {
+        case .pubkeyHash, .scriptHash:
+            let payload = Data([type.versionByte160]) + self.data
+            let scheme = network is Mainnet ? "simpleledger" : "slptest"
+            self.slpaddr = Bech32.encode(payload, prefix: scheme)
+        default:
+            self.slpaddr = ""
+        }
     }
     public init(data: Data, type: AddressType, network: Network) {
         let addressData: Data = [type.versionByte] + data
@@ -199,6 +226,7 @@ public struct Cashaddr: Address {
         self.publicKey = nil
         self.base58 = publicKeyHashToAddress(addressData)
         self.cashaddr = Bech32.encode(addressData, prefix: network.scheme)
+        self.slpaddr = Bech32.encode(addressData, prefix: network is Mainnet ? "simpleledger" : "slptest")
     }
 }
 
@@ -211,5 +239,98 @@ extension Cashaddr: Equatable {
 extension Cashaddr: CustomStringConvertible {
     public var description: String {
         return cashaddr
+    }
+}
+
+public struct SimpleLedgerAddress: Address {
+    public let network: Network
+    public let type: AddressType
+    public let data: Data
+    public let base58: String
+    public let cashaddr: CashaddrWithScheme
+    public let slpaddr: SimpleLedgerAddressWithScheme
+    public let publicKey: Data?
+    
+    public typealias CashaddrWithScheme = String
+    public typealias SimpleLedgerAddressWithScheme = String
+    
+    public init(data: Data, type: AddressType, network: Network, base58: String, cashaddr: CashaddrWithScheme, slpaddr: SimpleLedgerAddressWithScheme, publicKey: Data?) {
+        self.data = data
+        self.type = type
+        self.network = network
+        self.base58 = base58
+        self.cashaddr = cashaddr
+        self.slpaddr = slpaddr
+        self.publicKey = publicKey
+    }
+    
+    public init(_ slpaddr: SimpleLedgerAddressWithScheme) throws {
+        guard let decoded = Bech32.decode(slpaddr) else {
+            throw AddressError.invalid
+        }
+        let (prefix, raw) = (decoded.prefix, decoded.data)
+        self.slpaddr = slpaddr
+        self.publicKey = nil
+        
+        switch prefix {
+        case "simpleledger":
+            network = .mainnet
+        case "slptest":
+            network = .testnet
+        default:
+            throw AddressError.invalidScheme
+        }
+        
+        let versionByte = raw[0]
+        let hash = raw.dropFirst()
+        
+        guard hash.count == VersionByte.getSize(from: versionByte) else {
+            throw AddressError.invalidVersionByte
+        }
+        self.data = hash
+        guard let typeBits = VersionByte.TypeBits(rawValue: (versionByte & 0b01111000)) else {
+            throw AddressError.invalidVersionByte
+        }
+        
+        switch typeBits {
+        case .pubkeyHash:
+            type = .pubkeyHash
+            base58 = publicKeyHashToAddress(Data([network.pubkeyhash]) + data)
+        case .scriptHash:
+            type = .scriptHash
+            base58 = publicKeyHashToAddress(Data([network.scripthash]) + data)
+        }
+        
+        // cashaddr
+        switch type {
+        case .pubkeyHash, .scriptHash:
+            let payload = Data([type.versionByte160]) + self.data
+            let scheme = network is Mainnet ? "bitcoincash" : "bchtest"
+            self.cashaddr = Bech32.encode(payload, prefix: scheme)
+        default:
+            self.cashaddr = ""
+        }
+    }
+    public init(data: Data, type: AddressType, network: Network) {
+        let addressData: Data = [type.versionByte] + data
+        self.data = data
+        self.type = type
+        self.network = network
+        self.publicKey = nil
+        self.base58 = publicKeyHashToAddress(addressData)
+        self.cashaddr = Bech32.encode(addressData, prefix: network.scheme)
+        self.slpaddr = Bech32.encode(addressData, prefix: network is Mainnet ? "simpleledger" : "slptest")
+    }
+}
+
+extension SimpleLedgerAddress: Equatable {
+    public static func == (lhs: SimpleLedgerAddress, rhs: SimpleLedgerAddress) -> Bool {
+        return lhs.network == rhs.network && lhs.data == rhs.data && lhs.type == rhs.type
+    }
+}
+
+extension SimpleLedgerAddress: CustomStringConvertible {
+    public var description: String {
+        return slpaddr
     }
 }

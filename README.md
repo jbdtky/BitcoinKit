@@ -1,12 +1,9 @@
 ![BitcoinKit: Let’s Play with Bitcoin in Swift!](https://user-images.githubusercontent.com/23519083/44261174-cc64aa00-a251-11e8-85b6-145e0bcae102.jpg)
 
-[![CI Status](http://img.shields.io/travis/yenom/BitcoinKit.svg)](https://travis-ci.org/yenom/BitcoinKit)
-[![codecov](https://codecov.io/gh/yenom/BitcoinKit/branch/master/graph/badge.svg)](https://codecov.io/gh/yenom/BitcoinKit)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Version](https://img.shields.io/cocoapods/v/BitcoinKit.svg)](http://cocoadocs.org/docsets/BitcoinKit)
-[![Platform](https://img.shields.io/cocoapods/p/BitcoinKit.svg)](http://cocoadocs.org/docsets/BitcoinKit)
-[![Backers on Open Collective](https://opencollective.com/BitcoinKit/backers/badge.svg)](#backers) 
-[![Sponsors on Open Collective](https://opencollective.com/BitcoinKit/sponsors/badge.svg)](#sponsors) 
+[![Build Status](https://travis-ci.com/Bitcoin-com/BitcoinKit.svg?branch=master)](https://travis-ci.com/Bitcoin-com/BitcoinKit)
+[![codecov](https://codecov.io/gh/yenom/BitcoinKit/branch/master/graph/badge.svg)](https://codecov.io/gh/bitcoin-com/BitcoinKit)
+![Version](https://img.shields.io/badge/version-v1.1.1-blue.svg)
+![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg) 
 
 ### Welcome to BitcoinKit
 
@@ -22,7 +19,7 @@ Release notes are [here](CHANGELOG.md).
 Features
 --------
 
-- Encoding/decoding addresses: base58, Cashaddr, P2PKH, P2SH, WIF format.
+- Encoding/decoding addresses: base58, Cashaddr, SLP, P2PKH, P2SH, WIF format.
 - Transaction building blocks: inputs, outputs, scripts.
 - EC keys and signatures.
 - BIP32, BIP44 hierarchical deterministic wallets.
@@ -136,6 +133,7 @@ $ gem install cocoapods
 To integrate BitcoinKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
+source 'https://github.com/jbdtky/CocoaPods.git'
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '10.0'
 use_frameworks!
@@ -150,33 +148,13 @@ Then, run the following command:
 $ pod install
 ```
 
-### Carthage
-
-[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
-
-You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
-
-```bash
-$ brew update
-$ brew install carthage
-```
-
-To integrate BitcoinKit into your Xcode project using Carthage, specify it in your `Cartfile`:
-
-```ogdl
-github "yenom/BitcoinKit"
-```
-
-Run `carthage update` to build the framework and drag the built `BitcoinKit.framework` into your Xcode project.
-
-
 ### Swift Package Manager
 
 BitcoinKit is available through [Swift Package Manager](https://github.com/apple/swift-package-manager). To install
 it, simply add the following lines to dependencies of your Package.swift:
 
 ```swift
-.package(url: "https://github.com/yenom/BitcoinKit.git", .upToNextMinor(from: "0.1.0"))
+.package(url: "https://github.com/jbdtky/BitcoinKit.git", .upToNextMinor(from: "0.1.0"))
 ```
 
 Note that following data types and features are currently not supported on Linux platform.  
@@ -189,16 +167,19 @@ Contribute
 Contributions to BitcoinKit are welcome and encouraged!
 Feel free to open issues, drop us pull requests.
 
-## Authors & Maintainers
+## Authors
+ - Kishikawa Katsumi
  - [usatie](https://github.com/usatie)
  - [akifuji](https://github.com/akifuj)
+ - Jean-Baptiste Dominguez [[Github](https://github.com/jbdtky), [Twitter](https://twitter.com/jbdtky)]
+ - Angel Mortega [[Github](https://github.com/holemcross)]
+
+## Maintainers
+ - Jean-Baptiste Dominguez [[Github](https://github.com/jbdtky), [Twitter](https://twitter.com/jbdtky)]
 
  ## About
 
- <img width=220 src="https://user-images.githubusercontent.com/24402451/44437525-9169ca00-a5f5-11e8-8a77-9c1b906fb864.jpg"></img>
-
- BitcoinKit is maintained and funded by Yenom.
- Visit our [website](https://yenom.tech) or say hi on twitter ([@Yenom_wallet_en](https://twitter.com/Yenom_wallet_en))
+ Visit my twitter ([@jbdtky](https://twitter.com/jbdtky))
 
 License
 -------
@@ -208,29 +189,7 @@ BitcoinKit is available under the MIT license. See the LICENSE file for more inf
 ## Contributors
 
 This project exists thanks to all the people who contribute. 
-<a href="graphs/contributors"><img src="https://opencollective.com/BitcoinKit/contributors.svg?width=890&button=false" /></a>
+<a href="graphs/contributors">See the contributors</a>
 
-
-## Backers
-
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/BitcoinKit#backer)]
-
-<a href="https://opencollective.com/BitcoinKit#backers" target="_blank"><img src="https://opencollective.com/BitcoinKit/backers.svg?width=890"></a>
-
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/BitcoinKit#sponsor)]
-
-<a href="https://opencollective.com/BitcoinKit/sponsor/0/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/1/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/2/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/3/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/4/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/5/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/6/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/7/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/8/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/BitcoinKit/sponsor/9/website" target="_blank"><img src="https://opencollective.com/BitcoinKit/sponsor/9/avatar.svg"></a>
 
 
