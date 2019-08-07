@@ -1,6 +1,7 @@
 //
 //  OpCode.swift
 //
+//  Copyright © 2019 Jean-Baptiste Dominguez
 //  Copyright © 2018 BitcoinKit developers
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
